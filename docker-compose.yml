@@ -1,0 +1,34 @@
+version: '3'
+  
+services:
+  php:
+    build: ./backend
+    volumes: 
+      - ./backend:/var/www/html
+    ports:
+      - 9000:80
+
+  node:
+      build: ./frontend 
+      volumes: 
+        - ./frontend:/app
+      ports:
+        - 3000:3000
+
+  mysql: 
+    image: mysql:latest
+    environment:
+      - MYSQL_DATABASE=db_employee
+      - MYSQL_USER=db_user
+      - MYSQL_PASSWORD=dbuserpwd
+      - MYSQL_ALLOW_EMPTY_PASSWORD=1
+    volumes:
+      - ./initdb:/docker-entrypoint-initdb.d
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    ports:
+      - 9001:80
+    environment:
+      - PMA_HOST=mysql
+      - PMA_PORT=3306
